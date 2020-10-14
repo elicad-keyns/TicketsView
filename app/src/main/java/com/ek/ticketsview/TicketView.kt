@@ -4,7 +4,11 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
+import kotlin.math.max
+import kotlin.math.min
 
 
 class TicketView @JvmOverloads constructor(
@@ -13,12 +17,10 @@ class TicketView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val places = arrayOf(1, 1, 1, 1, 1)
-
-    private val placesA = arrayOf(
+    private var places = arrayOf(
         arrayOf(1, 1, 0, 1, 1, 1, 2, 2, 0, 1, 1, 0, 1, 1, 2),
         arrayOf(1, 1, 2, 2, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 2),
-        arrayOf(1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 2, 2, 1)
+        arrayOf(1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2)
     )
 
     private var paddingHorizontal = 20f
@@ -44,6 +46,7 @@ class TicketView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.d("TicketView", "onAttachedToWindow")
+
     }
 
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
@@ -53,6 +56,19 @@ class TicketView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         Log.d("TicketView", "onDraw")
+
+        var countPlaces: Int = 0
+
+        for (row in places) {
+            if (countPlaces < row.size)
+                countPlaces = row.size
+        }
+
+
+        placeSide = width / countPlaces.toFloat()
+        paddingHorizontal = placeSide / 8
+        paddingVertical = placeSide / 8
+        placeSide = (width - paddingHorizontal * (countPlaces + 1)) / countPlaces
 
         drawScreen(canvas)
         drawPlaces(canvas)
@@ -88,11 +104,16 @@ class TicketView @JvmOverloads constructor(
         )
     }
 
+    fun updatePlaces(_places: Array<Array<Int>>) {
+        places = _places
+        requestLayout()
+    }
+
     private fun drawPlaces(canvas: Canvas?) {
         var x: Float = paddingHorizontal
         var y: Float = paddingVertical + cScreenHeight + paddingVertical
 
-        for (row in placesA) {
+        for (row in places) {
             for (place in row) {
                 when(place) {
                     0 -> {
@@ -112,21 +133,6 @@ class TicketView @JvmOverloads constructor(
             x = paddingHorizontal
             y += placeSide + paddingVertical
         }
-
-//        for (place in places) {
-//            when(place) {
-//                0 -> {
-//
-//                }
-//                1 -> {
-//                    drawPlace(x, y, canvas)
-//                    x += placeSide + paddingHorizontal
-//                }
-//                2 -> {
-//
-//                }
-//            }
-//        }
     }
 
     private fun drawPlace(x: Float, y: Float, canvas: Canvas?, isPlace: Boolean, isBuy: Boolean) {
