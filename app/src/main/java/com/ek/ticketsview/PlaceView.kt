@@ -6,13 +6,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
+import android.widget.Button
 
 class PlaceView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     _color: Int = Color.GRAY,
-    _cornerRadius: Float = 20f
+    _cornerRadius: Float = 20f,
+    type: Int = 1
 ) : androidx.appcompat.widget.AppCompatButton(context, attrs, defStyleAttr) {
 
     private var placeBackground: Int = _color
@@ -20,10 +23,25 @@ class PlaceView @JvmOverloads constructor(
 
     init {
         isClickable = true
-        setBackgroundColor(Color.GRAY)
+        when (type) {
+            0 ->  {
+                setBackgroundColor(Color.WHITE)
+                visibility = INVISIBLE
+            }
+            1 -> {
+                setBackgroundColor(Color.GRAY)
+            }
+            2 -> {
+                setBackgroundColor(Color.RED)
+            }
+        }
+        gravity = Gravity.CENTER
     }
 
     override fun performClick(): Boolean {
+        if ((background as ColorDrawable).color == Color.WHITE)
+            return super.performClick()
+
         if ((background as ColorDrawable).color == Color.GRAY)
             setBackgroundColor(Color.RED)
         else
