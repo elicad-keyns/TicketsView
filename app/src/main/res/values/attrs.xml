@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TicketView">
+    </declare-styleable>
+
+    <declare-styleable name="PlaceView">
+        <attr name="android:clickable"/>
+        <attr name="placeColor" format="color"/>
+        <attr name="passageColor" format="color"/>
+        <attr name="boughtPlaceColor" format="color"/>
+    </declare-styleable>
+</resources>

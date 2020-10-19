@@ -4,11 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
 import android.view.View
-import kotlin.math.max
-import kotlin.math.min
 
 
 class TicketView @JvmOverloads constructor(
@@ -17,10 +13,10 @@ class TicketView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var places = arrayOf(
-        arrayOf(1, 1, 0, 1, 1, 1, 2, 2, 0, 1, 1, 0, 1, 1, 2),
-        arrayOf(1, 1, 2, 2, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 2),
-        arrayOf(1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2)
+    private var places = arrayListOf(
+        arrayListOf(1, 1, 0, 1, 1, 1, 2, 2, 0, 1, 1, 0, 1, 1, 2),
+        arrayListOf(1, 1, 2, 2, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 2),
+        arrayListOf(1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2)
     )
 
     private var paddingHorizontal = 20f
@@ -64,7 +60,6 @@ class TicketView @JvmOverloads constructor(
                 countPlaces = row.size
         }
 
-
         placeSide = width / countPlaces.toFloat()
         paddingHorizontal = placeSide / 8
         paddingVertical = placeSide / 8
@@ -104,7 +99,7 @@ class TicketView @JvmOverloads constructor(
         )
     }
 
-    fun updatePlaces(_places: Array<Array<Int>>) {
+    fun updatePlaces(_places: ArrayList<ArrayList<Int>>) {
         places = _places
         requestLayout()
     }
@@ -115,7 +110,7 @@ class TicketView @JvmOverloads constructor(
 
         for (row in places) {
             for (place in row) {
-                when(place) {
+                when (place) {
                     0 -> {
                         drawPlace(x, y, canvas, isPlace = false, isBuy = false)
                         x += placeSide + paddingHorizontal

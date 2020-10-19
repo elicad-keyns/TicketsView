@@ -1,53 +1,74 @@
 package com.ek.ticketsview
 
 import android.content.Context
-import android.graphics.Canvas
+import android.graphics.*
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.Log
-import android.view.View
 
 class PlaceView @JvmOverloads constructor(
     context: Context,
-    _placeStyle: Int,
-    _placeSide: Int,
-    _isPlace: Boolean,
-    _isBuy: Boolean,
-    _cornerRadius: Float = 0f,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0,
+    _color: Int = Color.GRAY,
+    _cornerRadius: Float = 20f
+) : androidx.appcompat.widget.AppCompatButton(context, attrs, defStyleAttr) {
 
-    private var placeStyle = _placeStyle
-    private var placeSide = _placeSide
-    private var isPlace = _isPlace
-    private var isBuy = _isBuy
+    private var placeBackground: Int = _color
     private var cornerRadius = _cornerRadius
 
-    private val rect = RectF(
-        x,
-        y,
-        x + placeSide,
-        y + placeSide
-    )
+    init {
+        isClickable = true
+        setBackgroundColor(Color.GRAY)
+    }
 
-    private val paint = Paint()
+    override fun performClick(): Boolean {
+        if ((background as ColorDrawable).color == Color.GRAY)
+            setBackgroundColor(Color.RED)
+        else
+            setBackgroundColor(Color.GRAY)
+
+        return super.performClick()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        Log.d("SIZE CHANGER", "w -> $w, h -> $h, oldW -> $oldw, oldH -> $oldh")
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        Log.d("TicketView", "onMeasure")
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Log.d("TicketView", "onAttachedToWindow")
+    }
+
+    override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+        super.onLayout(p0, left, top, right, bottom)
+    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        if (isPlace)
-            paint.color = Color.GRAY
-        else
-            paint.color = Color.WHITE
-
-        if (isBuy)
-            paint.color = Color.RED
-
-        canvas?.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
+//        drawPlace(canvas)
 
         Log.d("PLACE DRAWER", "x -> $x, y -> $y ")
     }
+//
+//    private fun drawPlace(canvas: Canvas?) {
+//
+//        val rect = RectF(
+//            0f,
+//            0f,
+//            width.toFloat(),
+//            height.toFloat()
+//        )
+//
+//        val paint: Paint = Paint().apply { this.color = placeBackground}
+//        canvas?.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
+//    }
 }
