@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.widget.Button
+import androidx.core.content.ContextCompat
 
 class PlaceView @JvmOverloads constructor(
     context: Context,
@@ -15,7 +16,7 @@ class PlaceView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     _color: Int = Color.GRAY,
     _cornerRadius: Float = 20f,
-    type: Int = 1
+    _type: Int = 1
 ) : androidx.appcompat.widget.AppCompatButton(context, attrs, defStyleAttr) {
 
     private var placeBackground: Int = _color
@@ -23,7 +24,7 @@ class PlaceView @JvmOverloads constructor(
 
     init {
         isClickable = true
-        when (type) {
+        when (_type) {
             0 ->  {
                 setBackgroundColor(Color.WHITE)
                 visibility = INVISIBLE
@@ -35,18 +36,25 @@ class PlaceView @JvmOverloads constructor(
                 setBackgroundColor(Color.RED)
             }
         }
+        setTextColor(Color.GRAY)
         gravity = Gravity.CENTER
     }
 
     override fun performClick(): Boolean {
-        if ((background as ColorDrawable).color == Color.WHITE)
-            return super.performClick()
 
-        if ((background as ColorDrawable).color == Color.GRAY)
-            setBackgroundColor(Color.RED)
-        else
-            setBackgroundColor(Color.GRAY)
-
+        when ((background as ColorDrawable).color) {
+            Color.WHITE -> {
+                return super.performClick()
+            }
+            Color.GRAY -> {
+                setBackgroundColor(Color.RED)
+                setTextColor(Color.BLACK)
+            }
+            Color.RED -> {
+                setBackgroundColor(Color.GRAY)
+                setTextColor(Color.GRAY)
+            }
+        }
         return super.performClick()
     }
 
@@ -72,21 +80,6 @@ class PlaceView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-//        drawPlace(canvas)
-
         Log.d("PLACE DRAWER", "x -> $x, y -> $y ")
     }
-//
-//    private fun drawPlace(canvas: Canvas?) {
-//
-//        val rect = RectF(
-//            0f,
-//            0f,
-//            width.toFloat(),
-//            height.toFloat()
-//        )
-//
-//        val paint: Paint = Paint().apply { this.color = placeBackground}
-//        canvas?.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
-//    }
 }
